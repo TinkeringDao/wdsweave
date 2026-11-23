@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Run TDD seam test suite
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Verify Python and shell syntax
+        run: |
+          set -euo pipefail
+          python3 -m compileall -q scripts tests
+          find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} +
