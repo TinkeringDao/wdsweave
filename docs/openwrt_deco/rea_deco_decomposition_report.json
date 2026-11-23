@@ -1,0 +1,140 @@
+{
+  "architecture": "MIPS 24Kc (Qualcomm Atheros QCA9563)",
+  "stock_firmware": {
+    "file": "M4R_en_1.8.0_Build_20250721_Rel.49216.bin",
+    "file_size": 13280989,
+    "sha256": "b10c15ef6e47c84e9e24f32e12017d5e38b8f5409eda18000aa5d64842735727",
+    "md5": "4abf12ff974e4f931dfcd4909fad9cc1",
+    "vendor_header": {
+      "fw_type": "fw-type:Cloud",
+      "header_bytes_prefix_hex": "00caa6dd9694caef22cb040167656c754480161f66772d747970653a436c6f75"
+    },
+    "uimages": [
+      {
+        "offset": 8212,
+        "offset_hex": "0x00002014",
+        "magic": "0x27051956",
+        "header_crc": "0xFEF33606",
+        "timestamp": 1752208013,
+        "data_size": 1134136,
+        "data_crc": "0x0D7453DE",
+        "load_address": "0x80060000",
+        "entry_point": "0x80060000",
+        "os": "linux",
+        "arch": "mips",
+        "type": "multi",
+        "compression": "lzma",
+        "image_name": "MIPS OpenWrt Linux-3.3.8"
+      }
+    ],
+    "squashfs_filesystems": [
+      {
+        "magic": "hsqs",
+        "offset": 1187861,
+        "offset_hex": "0x00122015"
+      }
+    ]
+  },
+  "exploit_payload": {
+    "file": "deco_all_webfailsafe_faux_fw_tftp_v2.bin",
+    "file_size": 32768,
+    "sha256": "185daa909e2e8fc08b4439d88284ff0e3c76402932d9c79261e954ab70ef6c70",
+    "md5": "c34beda0c076c47f0de6689b422d54fe",
+    "exploit_details": {
+      "target_service": "U-Boot WebFailsafe HTTPD (sscanf stack buffer overflow)",
+      "vulnerability_parameter": "fw-type",
+      "stack_buffer_size": 256,
+      "saved_registers_clobbered": "$s0, $s1, $s2",
+      "overwritten_return_address": "0x80060200",
+      "embedded_shellcode_commands": [
+        {
+          "string": "setenv serverip 192.168.0.2",
+          "offset": 832,
+          "offset_hex": "0x00000340"
+        },
+        {
+          "string": "setenv ipaddr 192.168.0.1",
+          "offset": 896,
+          "offset_hex": "0x00000380"
+        },
+        {
+          "string": "tftpboot 0x82000000 initramfs-kernel.bin",
+          "offset": 960,
+          "offset_hex": "0x000003C0"
+        },
+        {
+          "string": "bootm 0x82000000",
+          "offset": 1024,
+          "offset_hex": "0x00000400"
+        }
+      ]
+    }
+  },
+  "openwrt_initramfs": {
+    "file": "openwrt-24.10.8-ath79-generic-tplink_deco-m4r-v1-initramfs-kernel.bin",
+    "image_kind": "initramfs-ram-bootstrap",
+    "file_size": 6806422,
+    "sha256": "87dc29352f6d793e2e69cedcad630094eabafbf946318f2a5cbab2cbec820b0f",
+    "md5": "c7104a334da1d84bed5c5e8babca444e",
+    "uimages": [
+      {
+        "offset": 0,
+        "offset_hex": "0x00000000",
+        "magic": "0x27051956",
+        "header_crc": "0xE259C6DC",
+        "timestamp": 1784877710,
+        "data_size": 6806358,
+        "data_crc": "0xB8AFC195",
+        "load_address": "0x80060000",
+        "entry_point": "0x80060000",
+        "os": "linux",
+        "arch": "mips",
+        "type": "kernel",
+        "compression": "lzma",
+        "image_name": "MIPS OpenWrt Linux-6.6.144"
+      }
+    ],
+    "squashfs_filesystems": []
+  },
+  "openwrt_sysupgrade": {
+    "file": "openwrt-24.10.8-ath79-generic-tplink_deco-m4r-v1-squashfs-sysupgrade.bin",
+    "image_kind": "squashfs-flash-permanent",
+    "file_size": 7143749,
+    "sha256": "d4d47b91575c58731ce005a7b694780e88ea636ec3f8d03ec948ea49b57b1065",
+    "md5": "1b625cba09504cb51e00b18f78ad0b03",
+    "uimages": [
+      {
+        "offset": 0,
+        "offset_hex": "0x00000000",
+        "magic": "0x27051956",
+        "header_crc": "0x63D7C1B9",
+        "timestamp": 1784877710,
+        "data_size": 2627549,
+        "data_crc": "0x35AB0ED4",
+        "load_address": "0x80060000",
+        "entry_point": "0x80060000",
+        "os": "linux",
+        "arch": "mips",
+        "type": "kernel",
+        "compression": "lzma",
+        "image_name": "MIPS OpenWrt Linux-6.6.144"
+      }
+    ],
+    "squashfs_filesystems": [
+      {
+        "magic": "hsqs",
+        "offset": 2627613,
+        "offset_hex": "0x0028181D"
+      }
+    ]
+  },
+  "comparative_analysis": {
+    "kernel_upgrade": "Linux 3.3.8 (Stock 2012 baseline) -> Linux 6.6.144 (OpenWrt 24.10.8)",
+    "memory_execution_seam": {
+      "u_boot_exploit_jump": "0x80060200",
+      "u_boot_load_address": "0x80060000",
+      "tftp_staged_ram_address": "0x82000000",
+      "tftp_staged_filename": "initramfs-kernel.bin"
+    }
+  }
+}
